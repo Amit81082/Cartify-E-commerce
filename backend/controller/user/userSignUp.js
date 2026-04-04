@@ -8,10 +8,9 @@ async function userSignUpController(req,res){
 
         const user = await userModel.findOne({email})
 
-        console.log("user",user)
 
         if(user){
-            throw new Error("Already user exits.")
+            throw new Error("Already user exists.")
         }
 
         if(!email){
@@ -28,7 +27,7 @@ async function userSignUpController(req,res){
         const hashPassword = await bcrypt.hashSync(password, salt);
 
         if(!hashPassword){
-            throw new Error("Something is wrong")
+            throw new Error("Something is wrong while hashing password")
         }
 
         const payload = {
@@ -39,6 +38,8 @@ async function userSignUpController(req,res){
 
         const userData = new userModel(payload)
         const saveUser = await userData.save()
+
+        console.log("saveUser",saveUser)
 
         res.status(201).json({
             data : saveUser,

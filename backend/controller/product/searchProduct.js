@@ -2,7 +2,8 @@ const productModel = require("../../models/productModel")
 
 const searchProduct = async(req,res)=>{
     try{
-        const query = req.query.q 
+        const query = req.query.q
+        console.log("query", query)
 
         const regex = new RegExp(query,'i','g')
 
@@ -17,7 +18,7 @@ const searchProduct = async(req,res)=>{
             ]
         })
 
-
+//    console.log("searched products",product)
         res.json({
             data  : product ,
             message : "Search Product list",

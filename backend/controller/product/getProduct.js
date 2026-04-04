@@ -5,7 +5,7 @@ const getProductController = async(req,res)=>{
         const allProduct = await productModel.find().sort({ createdAt : -1 })
 
         res.json({
-            message : "All Product",
+            message : "All Product List",
             success : true,
             error : false,
             data : allProduct

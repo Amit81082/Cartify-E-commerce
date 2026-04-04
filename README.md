@@ -3,16 +3,17 @@ Full Stack E-Commerce MERN APP
 
 ![Alt text](Full%20Stack%20E-Commerce%20MERN%20App.png?raw=true "Title")
 
-Backend .env file 
+## Environment Variables
 
-MONGODB_URI = 
-TOKEN_SECRET_KEY = 
-FRONTEND_URL
+The following environment variables are required to run the application:
 
-Frontend .env file
+### Backend .env file
 
-REACT_APP_CLOUD_NAME_CLOUDINARY = 
+* `MONGODB_URI`: The URI of the MongoDB database
+* `TOKEN_SECRET_KEY`: The secret key for JWT authentication
+* `FRONTEND_URL`: The URL of the frontend application
 
-Image : https://drive.google.com/drive/folders/1KmY74OYniEodtOVAjNGJv4628HghRbcQ?usp=sharing
+### Frontend .env file
 
-Full Video available on youtube : Dynamic Coding with Amit
+* `REACT_APP_CLOUD_NAME_CLOUDINARY`: The name of the cloudinary service for React App
+

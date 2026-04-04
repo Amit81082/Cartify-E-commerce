@@ -16,49 +16,58 @@ function App() {
   const [cartProductCount,setCartProductCount] = useState(0)
 
   const fetchUserDetails = async()=>{
-      const dataResponse = await fetch(SummaryApi.current_user.url,{
-        method : SummaryApi.current_user.method,
+      try {
+        const dataResponse = await fetch(SummaryApi.current_user.url,{
+          method : SummaryApi.current_user.method,
+          credentials : 'include'
+        })
+
+        const dataApi = await dataResponse.json()
+
+        if(dataApi.success){
+          dispatch(setUserDetails(dataApi.data))
+        }
+      } catch (error) {
+        console.log("error in fetchUserDetails",error)
+      }
+  }
+
+  const fetchCountAddtoCart = async()=>{
+    try {
+      const dataResponse = await fetch(SummaryApi.addToCartProductCount.url,{
+        method : SummaryApi.addToCartProductCount.method,
         credentials : 'include'
       })
 
       const dataApi = await dataResponse.json()
+      console.log("no of cart products", dataApi?.data?.count);
 
-      if(dataApi.success){
-        dispatch(setUserDetails(dataApi.data))
-      }
-  }
-
-  const fetchUserAddToCart = async()=>{
-    const dataResponse = await fetch(SummaryApi.addToCartProductCount.url,{
-      method : SummaryApi.addToCartProductCount.method,
-      credentials : 'include'
-    })
-
-    const dataApi = await dataResponse.json()
-
-    setCartProductCount(dataApi?.data?.count)
+      setCartProductCount(dataApi?.data?.count)
+    } catch (error) {
+      console.log("error in fetch no ofAddToCart products",error)
+    }
   }
 
   useEffect(()=>{
     /**user Details */
     fetchUserDetails()
     /**user Details cart product */
-    fetchUserAddToCart()
+    fetchCountAddtoCart()
 
   },[])
   return (
     <>
       <Context.Provider value={{
-          fetchUserDetails, // user detail fetch 
+          fetchUserDetails, // user detail fetch
           cartProductCount, // current user add to cart product count,
-          fetchUserAddToCart
+          fetchCountAddtoCart
       }}>
-        <ToastContainer 
+        <ToastContainer
           position='top-center'
         />
-        
+
         <Header/>
-        <main className='min-h-[calc(100vh-120px)] pt-16'>
+        <main className='min-h-[calc(100vh-50px)] pt-16'>
           <Outlet/>
         </main>
         <Footer/>

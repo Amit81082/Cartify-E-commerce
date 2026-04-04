@@ -1,5 +1,5 @@
 const scrollTop = () =>{
-    window.scrollTo({ top : 0 , behavior : 'smooth'})
+    window.scrollTo({ top : 10 , behavior : 'smooth'})
 }
 
 export default scrollTop

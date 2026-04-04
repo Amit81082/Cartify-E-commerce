@@ -2,12 +2,12 @@ const addToCartModel = require("../../models/cartProduct")
 
 const updateAddToCartProduct = async(req,res)=>{
     try{
-        const currentUserId = req.userId 
-        const addToCartProductId = req?.body?._id
+        const currentUserId = req.userId
+        const addtoCartId = req?.body?._id
 
         const qty = req.body.quantity
 
-        const updateProduct = await addToCartModel.updateOne({_id : addToCartProductId},{
+        const updateProduct = await addToCartModel.updateOne({_id : addtoCartId},{
             ...(qty && {quantity : qty})
         })
 

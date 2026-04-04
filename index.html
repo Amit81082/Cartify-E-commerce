@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Form</title>
+  <style>
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+      @media (max-width: 768px) {
+        width: 100%;
+      }
+
+      @media (max-width: 500px) {
+        font-size: 14px;
+      }
+    }
+
+    .login-form input {
+      margin-bottom: 15px;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+
+    .login-form button[type="submit"] {
+      background-color: #4CAF50;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .login-form button[type="submit"]:hover {
+      background-color: #45a049;
+    }
+
+    .login-form a {
+      color: blue;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+
+    .login-form a:hover {
+      color: darkblue;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-form">
+    <h2>Login Form</h2>
+    <form action="/login" method="post">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required />
+      <br />
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required />
+      <br />
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required />
+      <br />
+      <button type="submit">Login</button>
+    </form>
+    <p>New to this site? <a href="/signup">Sign up</a></p>
+    <p>Forgot your password? <a href="/forgotpassword">Click here</a></p>
+  </div>
+</body>

@@ -12,16 +12,19 @@ app.use(cors({
     credentials : true
 }))
 app.use(express.json())
-app.use(cookieParser())
+app.use(cookieParser()) 
 
 app.use("/api",router)
+
+app.get("/", (req, res) => {
+    res.send("Hello from backend!")
+})
 
 const PORT = 8080 || process.env.PORT
 
 
 connectDB().then(()=>{
     app.listen(PORT,()=>{
-        console.log("connnect to DB")
-        console.log("Server is running "+PORT)
+        console.log("Server is running at http://localhost:"+PORT)
     })
 })

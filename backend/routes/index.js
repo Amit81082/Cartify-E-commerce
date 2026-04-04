@@ -21,6 +21,7 @@ const addToCartViewProduct  = require('../controller/user/addToCartViewProduct')
 const updateAddToCartProduct = require('../controller/user/updateAddToCartProduct')
 const deleteAddToCartProduct = require('../controller/user/deleteAddToCartProduct')
 const searchProduct = require('../controller/product/searchProduct')
+const deleteProductImage = require('../controller/product/deleteProductImage')
 const filterProductController = require('../controller/product/filterProduct')
 
 
@@ -30,8 +31,8 @@ router.post("/signin",userSignInController)
 router.get("/user-details",authToken,userDetailsController)
 router.get("/userLogout",userLogout)
 
-//admin panel 
-router.get("/all-user",authToken,allUsers)
+//admin panel
+router.get("/all-users",authToken,allUsers)
 router.post("/update-user",authToken,updateUser)
 
 //product
@@ -43,6 +44,7 @@ router.post("/category-product",getCategoryWiseProduct)
 router.post("/product-details",getProductDetails)
 router.get("/search",searchProduct)
 router.post("/filter-product",filterProductController)
+router.post("/delete-product-image",authToken,deleteProductImage)
 
 //user add to cart
 router.post("/addtocart",authToken,addToCartController)
@@ -51,6 +53,7 @@ router.get("/view-card-product",authToken,addToCartViewProduct)
 router.post("/update-cart-product",authToken,updateAddToCartProduct)
 router.post("/delete-cart-product",authToken,deleteAddToCartProduct)
 
+// payment routes
 
 
 

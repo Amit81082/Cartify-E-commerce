@@ -52,18 +52,18 @@ const AllUsers = () => {
             </thead>
             <tbody className=''>
                 {
-                    allUser.map((el,index) => {
+                    allUser.map((user,index) => {
                         return(
                             <tr>
                                 <td>{index+1}</td>
-                                <td>{el?.name}</td>
-                                <td>{el?.email}</td>
-                                <td>{el?.role}</td>
-                                <td>{moment(el?.createdAt).format('LL')}</td>
+                                <td>{user?.name}</td>
+                                <td>{user?.email}</td>
+                                <td>{user?.role}</td>
+                                <td>{moment(user?.createdAt).format('LL')}</td>
                                 <td>
-                                    <button className='bg-green-100 p-2 rounded-full cursor-pointer hover:bg-green-500 hover:text-white' 
+                                    <button className='bg-green-100 p-2 rounded-full cursor-pointer hover:bg-green-500 hover:text-white'
                                     onClick={()=>{
-                                        setUpdateUserDetails(el)
+                                        setUpdateUserDetails(user)
                                         setOpenUpdateRole(true)
 
                                     }}
@@ -80,15 +80,15 @@ const AllUsers = () => {
 
         {
             openUpdateRole && (
-                <ChangeUserRole 
-                    onClose={()=>setOpenUpdateRole(false)} 
+                <ChangeUserRole
+                    onClose={()=>setOpenUpdateRole(false)}
                     name={updateUserDetails.name}
                     email={updateUserDetails.email}
                     role={updateUserDetails.role}
                     userId={updateUserDetails._id}
                     callFunc={fetchAllUsers}
                 />
-            )      
+            )
         }
     </div>
   )

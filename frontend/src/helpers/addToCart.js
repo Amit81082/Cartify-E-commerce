@@ -4,30 +4,37 @@ import { toast } from 'react-toastify'
 const addToCart = async(e,id) =>{
     e?.stopPropagation()
     e?.preventDefault()
+    // console.log("addtocart clicked", e)
 
-    const response = await fetch(SummaryApi.addToCartProduct.url,{
-        method : SummaryApi.addToCartProduct.method,
-        credentials : 'include',
-        headers : {
-            "content-type" : 'application/json'
-        },
-        body : JSON.stringify(
-            { productId : id }
-        )
-    })
+    try {
+        const response = await fetch(SummaryApi.addToCartProduct.url,{
+            method : SummaryApi.addToCartProduct.method,
+            credentials : 'include',
+            headers : {
+                "content-type" : 'application/json'
+            },
+            body : JSON.stringify(
+                { productId : id }
+            )
+        })
 
-    const responseData = await response.json()
+        const responseData = await response.json()
+        console.log("add to cart response", responseData)
 
-    if(responseData.success){
-        toast.success(responseData.message)
+        if(responseData.success){
+            toast.success(responseData.message)
+        }
+
+        if(responseData.error){
+            toast.error(responseData.message)
+        }
+
+        return responseData
+
+    } catch (error) {
+        toast.error(error.message)
+        console.log(error)
     }
-
-    if(responseData.error){
-        toast.error(responseData.message)
-    }
-
-
-    return responseData
 
 }
 

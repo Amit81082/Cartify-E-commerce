@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import SummaryApi from '../common'
-import VerticalCard from '../components/VerticalCard'
+import SearchResultVerticalCard from '../components/SearchResultVerticalCard'
 
 const SearchProduct = () => {
     const query = useLocation()
@@ -10,17 +10,18 @@ const SearchProduct = () => {
 
     console.log("query",query.search)
 
-    const fetchProduct = async()=>{
+    const fetchSearchedProducts = async()=>{
         setLoading(true)
         const response = await fetch(SummaryApi.searchProduct.url+query.search)
         const dataResponse = await response.json()
+        console.log("searched products",dataResponse)
         setLoading(false)
 
         setData(dataResponse.data)
     }
 
     useEffect(()=>{
-        fetchProduct()
+        fetchSearchedProducts()
     },[query])
 
   return (
@@ -30,8 +31,8 @@ const SearchProduct = () => {
           <p className='text-lg text-center'>Loading ...</p>
         )
       }
- 
-      <p className='text-lg font-semibold my-3'>Search Results : {data.length}</p>
+
+      <p className='text-lg font-semibold my-5'>Search Results : {data.length}</p>
 
       {
         data.length === 0 && !loading && (
@@ -42,7 +43,7 @@ const SearchProduct = () => {
 
       {
         data.length !==0 && !loading && (
-          <VerticalCard loading={ loading} data={data}/>
+          <SearchResultVerticalCard loading={ loading} data={data}/>
         )
       }
 

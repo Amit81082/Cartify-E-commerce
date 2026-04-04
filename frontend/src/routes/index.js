@@ -11,6 +11,7 @@ import CategoryProduct from '../pages/CategoryProduct'
 import ProductDetails from '../pages/ProductDetails'
 import Cart from '../pages/Cart'
 import SearchProduct from '../pages/SearchProduct'
+import Payment from '../pages/PaymentPage'
 
 const router = createBrowserRouter([
     {
@@ -44,6 +45,10 @@ const router = createBrowserRouter([
             {
                 path : 'cart',
                 element : <Cart/>
+            },
+            {
+                path : "payment",
+                element : <Payment/>
             },
             {
                 path : "search",

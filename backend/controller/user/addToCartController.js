@@ -7,11 +7,11 @@ const addToCartController = async(req,res)=>{
 
         const isProductAvailable = await addToCartModel.findOne({ productId })
 
-        console.log("isProductAvailabl   ",isProductAvailable)
+        // console.log("isProductAvailable   ",isProductAvailable)
 
         if(isProductAvailable){
             return res.json({
-                message : "Already exits in Add to cart",
+                message : "Already exists in Add to cart",
                 success : false,
                 error : true
             })
@@ -23,6 +23,8 @@ const addToCartController = async(req,res)=>{
             userId : currentUser,
         }
 
+        console.log(" add to cart payload",payload)
+
         const newAddToCart = new addToCartModel(payload)
         const saveProduct = await newAddToCart.save()
 
@@ -33,7 +35,7 @@ const addToCartController = async(req,res)=>{
             success : true,
             error : false
         })
-        
+
 
     }catch(err){
         res.json({
