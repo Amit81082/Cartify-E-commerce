@@ -18,7 +18,7 @@ async function userSignInController(req, res) {
     if (!user) {
       throw new Error("User not found");
     }
- 
+
     const checkPassword = await bcrypt.compare(password, user.password);
 
     console.log("checkPassoword", checkPassword);
@@ -35,6 +35,7 @@ async function userSignInController(req, res) {
       const tokenOption = {
         httpOnly: true,
         secure: true,
+        sameSite: "none",
         maxAge: 1000 * 60 * 60 * 24 * 180,
       };
 
