@@ -47,7 +47,7 @@ const handlePayment = async ({
         order_id: orderedData.order.id,
 
         handler: async function (response) {
-          console.log("PAYMENT SUCCESS", response);
+          // console.log("PAYMENT SUCCESS", response);
 
           try {
             // 👉 SEND TO BACKEND VERIFY API
@@ -74,6 +74,7 @@ const handlePayment = async ({
             // 👉 HANDLE RESULT
 
             if (verifyData.success) {
+              toast.success("Order placed and Payment Success ✅");
               await fetch(`${process.env.REACT_APP_BACKEND_DOMAIN}/api/clear-cart`, {
                 method: "DELETE",
                 credentials: "include",
