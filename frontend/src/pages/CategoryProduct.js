@@ -142,7 +142,7 @@ const CategoryProduct = () => {
               {productCategory.map((categoryName, index) => {
                 const key = `category-checkbox-${index}-${categoryName?.value}`;
                 return (
-                  <div className="flex items-center gap-3">
+                  <div key={key} className="flex items-center gap-3">
                     <input
                       type="checkbox"
                       name={"category"}

@@ -1,146 +1,239 @@
-import React, { useContext, useEffect, useState } from 'react'
-import SummaryApi from '../common'
-import Context from '../context'
-import displayINRCurrency from '../helpers/displayCurrency'
+import React, { useContext, useEffect, useState } from "react";
+import SummaryApi from "../common";
+import Context from "../context";
+import displayINRCurrency from "../helpers/displayCurrency";
 import { MdDelete } from "react-icons/md";
-import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
+  const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const context = useContext(Context);
+  const loadingCart = new Array(context?.cartProductCount).fill(null);
 
-  const navigate = useNavigate()
-    const [data,setData] = useState([])
-    const [loading,setLoading] = useState(true)
-    const context = useContext(Context)
-    const loadingCart = new Array(context?.cartProductCount).fill(null)
+  const fetchCartData = async () => {
+    try {
+      const response = await fetch(SummaryApi.addToCartProductView.url, {
+        method: SummaryApi.addToCartProductView.method,
+        credentials: "include",
+        headers: {
+          "content-type": "application/json",
+        },
+      });
 
+      const responseData = await response.json();
+      console.log("cart.jsfetch data response", responseData.data);
 
-    const fetchCartData = async() =>{
-        try {
-            const response = await fetch(SummaryApi.addToCartProductView.url,{
-                method : SummaryApi.addToCartProductView.method,
-                credentials : 'include',
-                headers : {
-                    "content-type" : 'application/json'
-                },
-            })
+      if (responseData.success) {
+        setData(responseData.data);
+      } else {
+        throw new Error(responseData.message);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-            const responseData = await response.json()
-            console.log("cart.jsfetch data response", responseData.data)
+  const handleLoading = async () => {
+    await fetchCartData();
+  };
 
-            if(responseData.success){
-                setData(responseData.data)
-            } else {
-                throw new Error(responseData.message)
-            }
+  useEffect(() => {
+    setLoading(true);
+    handleLoading();
+    setLoading(false);
+  }, []);
 
-        } catch (error) {
-            console.log(error)
+  const increaseQty = async (id, qty) => {
+    setData(
+      data.map((item) =>
+        item._id === id ? { ...item, quantity: qty + 1 } : item,
+      ),
+    );
+    const response = await fetch(SummaryApi.updateCartProduct.url, {
+      method: SummaryApi.updateCartProduct.method,
+      credentials: "include",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        _id: id,
+        quantity: qty + 1,
+      }),
+    });
+
+    const responseData = await response.json();
+
+    if (!responseData.success) {
+      setData(
+        data.map((item) =>
+          item._id === id ? { ...item, quantity: qty } : item,
+        ),
+      );
+    }
+  };
+
+  const decreaseQty = async (id, qty) => {
+    if (qty >= 2) {
+      setData(
+        data.map((item) =>
+          item._id === id ? { ...item, quantity: qty - 1 } : item,
+        ),
+      );
+      const response = await fetch(SummaryApi.updateCartProduct.url, {
+        method: SummaryApi.updateCartProduct.method,
+        credentials: "include",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify({
+          _id: id,
+          quantity: qty - 1,
+        }),
+      });
+
+      const responseData = await response.json();
+
+      if (!responseData.success) {
+        setData(
+          data.map((item) =>
+            item._id === id ? { ...item, quantity: qty } : item,
+          ),
+        );
+      }
+    }
+  };
+
+  const deleteCartProduct = async (id) => {
+    if (
+      window.confirm("Are you sure you want to delete this product from cart?")
+    ) {
+      try {
+        const response = await fetch(SummaryApi.deleteCartProduct.url, {
+          method: SummaryApi.deleteCartProduct.method,
+          credentials: "include",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            _id: id,
+          }),
+        });
+        const responseData = await response.json();
+        if (responseData.success) {
+          // fetchCartData();
+          setData(data.filter((item) => item._id !== id));
+          context.fetchCountAddtoCart();
+        } else {
+          toast.error(
+            responseData?.message || "Unable to delete product from cart",
+          );
         }
-
+      } catch (error) {
+        toast.error(error?.message || "Unable to delete product from cart");
+      }
     }
+  };
 
-    const handleLoading = async() =>{
-        await fetchCartData()
-    }
+  const totalQty = data.reduce(
+    (previousValue, currentValue) => previousValue + currentValue.quantity,
+    0,
+  );
+  const totalPrice = data.reduce(
+    (preve, curr) => preve + curr.quantity * curr?.productId?.sellingPrice,
+    0,
+  );
 
-    useEffect(()=>{
-        setLoading(true)
-        handleLoading()
-         setLoading(false)
-    },[])
+  // 👉 REPLACE your old handlePayment
+  const handlePayment = async () => {
+    try {
+      console.log("payment start"); // 👉 KEEP FOR DEBUG
 
+      // 👉 CALL BACKEND
+      const response = await fetch(
+        `${process.env.REACT_APP_BACKEND_DOMAIN}/api/create-order`,
+        {
+          method: "POST",
+          headers: {
+            "content-type": "application/json",
+          },
+          body: JSON.stringify({
+            amount: totalPrice, // 👉 YOUR TOTAL PRICE
+          }),
+        },
+      );
 
-    const increaseQty = async(id,qty) =>{
-        setData(data.map(item => item._id === id ? {...item, quantity : qty + 1} : item))
-        const response = await fetch(SummaryApi.updateCartProduct.url,{
-            method : SummaryApi.updateCartProduct.method,
-            credentials : 'include',
-            headers : {
-                "content-type" : 'application/json'
-            },
-            body : JSON.stringify(
-                {
-                    _id : id,
-                    quantity : qty + 1
-                }
-            )
-        })
+      const data = await response.json();
 
-        const responseData = await response.json()
+      if (!data.success) {
+        toast.error("Order creation failed");
+        return;
+      }
 
+      // 👉 LOAD RAZORPAY SCRIPT
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+      document.body.appendChild(script);
 
-           if(!responseData.success){
-                setData(data.map(item => item._id === id ? {...item, quantity : qty} : item))
-            }
-    }
+      script.onload = () => {
+        // 👉 OPEN RAZORPAY POPUP
+        const options = {
+          key: "rzp_test_SZhecWwajk3sKV", // 👉 PUT YOUR KEY HERE
+          amount: data.order.amount,
+          currency: "INR",
+          name: "Cartify",
+          description: "Order Payment",
+          order_id: data.order.id,
 
+          handler: async function (response) {
+            console.log("PAYMENT SUCCESS", response);
 
-    const decreaseQty = async(id,qty) =>{
-        if(qty >= 2){
-            setData(data.map(item => item._id === id ? {...item, quantity : qty - 1} : item))
-            const response = await fetch(SummaryApi.updateCartProduct.url,{
-                method : SummaryApi.updateCartProduct.method,
-                credentials : 'include',
-                headers : {
-                    "content-type" : 'application/json'
-                },
-                body : JSON.stringify(
-                    {
-                        _id : id,
-                        quantity : qty - 1
-                    }
-                )
-            })
-
-            const responseData = await response.json()
-
-
-              if (!responseData.success) {
-                setData(
-                  data.map((item) =>
-                    item._id === id ? { ...item, quantity: qty } : item,
-                  ),
-                );
-              }
-        }
-    }
-
-    const deleteCartProduct = async(id)=>{
-        if (window.confirm("Are you sure you want to delete this product from cart?")) {
             try {
-                const response = await fetch(SummaryApi.deleteCartProduct.url,{
-                    method : SummaryApi.deleteCartProduct.method,
-                    credentials : 'include',
-                    headers : {
-                        "content-type" : 'application/json'
-                    },
-                    body : JSON.stringify(
-                        {
-                            _id : id,
-                        }
-                    )
-                })
-                const responseData = await response.json()
-                if(responseData.success){
-                    // fetchCartData();
-                    setData(data.filter((item) => item._id !== id));
-                    context.fetchCountAddtoCart();
-                } else {
-                    toast.error(responseData?.message || "Unable to delete product from cart")
-                }
+              // 👉 SEND TO BACKEND VERIFY API
+              const verifyRes = await fetch(
+                `${process.env.REACT_APP_BACKEND_DOMAIN}/api/verify-payment`,
+                {
+                  method: "POST",
+                  headers: {
+                    "content-type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    razorpay_order_id: response.razorpay_order_id,
+                    razorpay_payment_id: response.razorpay_payment_id,
+                    razorpay_signature: response.razorpay_signature,
+                  }),
+                },
+              );
+
+              const verifyData = await verifyRes.json();
+
+              // 👉 HANDLE RESULT
+              if (verifyData.success) {
+                toast.success("Payment Successful ✅"); // 👉 SUCCESS UI
+              } else {
+                toast.error("Payment Failed ❌"); // 👉 FAIL UI
+              }
             } catch (error) {
-                toast.error(error?.message || "Unable to delete product from cart")
+              console.log("payment verification error", error);
+              toast.error("Verification Error ❌");
             }
-        }
+          },
+
+          theme: {
+            color: "#3399cc",
+          },
+        };
+
+        const rzp = new window.Razorpay(options);
+        rzp.open();
+      };
+    } catch (error) {
+      console.log(error);
     }
-
-    const totalQty = data.reduce((previousValue,currentValue)=> previousValue + currentValue.quantity,0)
-    const totalPrice = data.reduce((preve,curr)=> preve + (curr.quantity * curr?.productId?.sellingPrice) ,0)
-
-
-
-
+  };
 
   return (
     <div className="container mx-auto">
@@ -241,17 +334,17 @@ const Cart = () => {
                 <p>{displayINRCurrency(totalPrice)}</p>
               </div>
               <button
+                onClick={handlePayment} // 👉 ADDED
                 className="bg-blue-600 p-2 text-white w-full mt-2"
               >
                 Payment
               </button>
-              ̥
             </div>
           )}
         </div>
       </div>
     </div>
   );
-}
+};;
 
-export default Cart
+export default Cart;
