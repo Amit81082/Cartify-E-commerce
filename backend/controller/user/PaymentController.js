@@ -1,5 +1,7 @@
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
+const Order = require("../../models/order.model");
+
 
 const razorpayInstance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID, // 👉 ENV USED
@@ -50,17 +52,29 @@ const verifyPayment = async (req, res) => {
       .digest("hex");
 
     // 👉 MATCH
-    if (expectedSignature === razorpay_signature) {
-      return res.json({
-        success: true,
-        message: "Payment Verified ✅",
-      });
-    } else {
-      return res.status(400).json({
-        success: false,
-        message: "Payment Failed ❌",
-      });
-    }
+   if (expectedSignature === razorpay_signature) {
+     // 👉 SAVE ORDER (MINIMAL)
+     const newOrder = new Order({
+       userId: req.userId, // 👉 assuming auth
+       products: [], // 👉 FOR NOW EMPTY (we improve later)
+       totalAmount: 0, // 👉 TEMP (improve later)
+       paymentStatus: "paid",
+       paymentId: razorpay_payment_id,
+     });
+
+     await newOrder.save(); // 👉 SAVE
+
+     return res.json({
+      data : newOrder,
+       success: true,
+       message: "Payment Verified & Order Saved ✅",
+     });
+   } else {
+     return res.status(400).json({
+       success: false,
+       message: "Payment Failed ❌",
+     });
+   }
   } catch (error) {
     res.status(500).json({
       success: false,
