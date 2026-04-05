@@ -76,8 +76,8 @@ const Header = () => {
           <Link to={"/"}>
             <Logo w={200} h={200} />
           </Link>
-        </div>̥
-
+        </div>
+        ̥
         <div className="hidden lg:flex items-center w-full justify-between max-w-sm border rounded-full focus-within:shadow pl-2">
           <input
             type="text"
@@ -90,7 +90,6 @@ const Header = () => {
             <GrSearch />
           </div>
         </div>
-
         <div className="flex items-center gap-7" ref={menuRef}>
           <div className="relative flex justify-center">
             {user?._id && (
@@ -101,11 +100,25 @@ const Header = () => {
                 {user?.profilePic ? (
                   <img
                     src={user?.profilePic}
-                    className="h-10 w-15 rounded-full"
                     alt={user?.name}
+                    className="
+                      w-[10vw] h-[10vw]
+                      min-w-[32px] min-h-[32px]
+                      max-w-[46px] max-h-[46px]
+                      rounded-full
+                      object-cover
+                      aspect-square
+                      shrink-0
+                    "
                   />
                 ) : (
-                  <FaRegCircleUser />
+                  <FaRegCircleUser
+                    className="
+                      text-[6vw]
+                      min-text-[24px]
+                      max-text-[40px]
+                    "
+                  />
                 )}
               </div>
             )}
@@ -122,13 +135,22 @@ const Header = () => {
                       Admin Panel
                     </Link>
                   )}
-                  <Link
-                    to={"/"}
-                    className="whitespace-nowrap hover:bg-slate-100 p-2"
-                    onClick={() => setMenuDisplay((preve) => !preve)}
-                  >
-                    Home
-                  </Link>
+                  <div className="flex flex-col">
+                    <Link
+                      to={"/"}
+                      className="whitespace-nowrap hover:bg-slate-100 p-2"
+                      onClick={() => setMenuDisplay((preve) => !preve)}
+                    >
+                      Home
+                    </Link>
+                    <Link
+                      to={"/order"}
+                      className="whitespace-nowrap hover:bg-slate-100 p-2"
+                      onClick={() => setMenuDisplay((preve) => !preve)}
+                    >
+                      Orders
+                    </Link>
+                  </div>
                 </nav>
               </div>
             )}
