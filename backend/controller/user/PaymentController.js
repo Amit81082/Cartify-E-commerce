@@ -10,6 +10,7 @@ const razorpayInstance = new Razorpay({
 
 // 👉 CREATE ORDER API
 const createOrder = async (req, res) => {
+  console.log("userId is ", req.userId);
   try {
     const { amount } = req.body; // 👉 FROM FRONTEND
 
@@ -36,6 +37,8 @@ const createOrder = async (req, res) => {
 
 // 👉 VERIFY PAYMENT
 const verifyPayment = async (req, res) => {
+  const { products, totalAmount } = req.body;
+  // console.log("products", products , "totalAmount", totalAmount);
   try {
     const {
       razorpay_order_id,
@@ -56,13 +59,18 @@ const verifyPayment = async (req, res) => {
      // 👉 SAVE ORDER (MINIMAL)
      const newOrder = new Order({
        userId: req.userId, // 👉 assuming auth
-       products: [], // 👉 FOR NOW EMPTY (we improve later)
-       totalAmount: 0, // 👉 TEMP (improve later)
+       products: products.map((item) => ({
+         productId: item.productId._id,
+         quantity: item.quantity,
+       })),
+       totalAmount: totalAmount, // 👉 TEMP (improve later)
        paymentStatus: "paid",
        paymentId: razorpay_payment_id,
      });
 
      await newOrder.save(); // 👉 SAVE
+
+     console.log(" Your newOrder is: ", newOrder);
 
      return res.json({
       data : newOrder,

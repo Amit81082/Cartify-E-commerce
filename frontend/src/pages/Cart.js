@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import handlePayment from "../components/HandlePayment";
 
+
 const Cart = () => {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
@@ -248,7 +249,7 @@ const Cart = () => {
                 <p>{displayINRCurrency(totalPrice)}</p>
               </div>
               <button
-                onClick={() => handlePayment(totalPrice)} // 👉 ADDED
+                onClick={() => handlePayment({totalPrice, data, setData, context, navigate})} // 👉 ADDED
                 className="bg-blue-600 p-2 text-white w-full mt-2"
               >
                 Payment

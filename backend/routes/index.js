@@ -24,6 +24,8 @@ const searchProduct = require('../controller/product/searchProduct')
 const deleteProductImage = require('../controller/product/deleteProductImage')
 const filterProductController = require('../controller/product/filterProduct')
 const { createOrder, verifyPayment } = require('../controller/user/PaymentController')
+const clearCart = require('../controller/user/ClearCartController')
+const { getOrders } = require('../controller/user/GetOrderDetails')
 
 
 
@@ -53,10 +55,14 @@ router.get("/countAddToCartProduct",authToken,countAddToCartProduct)
 router.get("/view-card-product",authToken,addToCartViewProduct)
 router.post("/update-cart-product",authToken,updateAddToCartProduct)
 router.post("/delete-cart-product",authToken,deleteAddToCartProduct)
+router.delete("/clear-cart", authToken, clearCart)
 
 // payment routes
-router.post("/create-order", createOrder);
-router.post("/verify-payment", verifyPayment);
+router.post("/create-order", authToken, createOrder);
+router.post("/verify-payment", authToken, verifyPayment);
+
+// get orders
+router.get("/get-orders", authToken, getOrders);
 
 
 
