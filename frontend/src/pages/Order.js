@@ -2,14 +2,18 @@ import { useEffect, useState } from "react";
 
 export default function Order() {
   const [orders, setOrders] = useState([]); // 👉 STATE
+  const [loading, setLoading] = useState(false);
   const fetchOrders = async () => {
     try {
+      setLoading(true)
       const res = await fetch(`${process.env.REACT_APP_BACKEND_DOMAIN}/api/get-orders`, {
         method: "GET",
         credentials: "include",
       });
 
       const data = await res.json();
+
+      setLoading(false)
 
       if (data.success) {
         setOrders(data.data); //  SAVE
@@ -22,6 +26,16 @@ export default function Order() {
   useEffect(() => {
     fetchOrders();
   }, []);
+
+  if (loading) {
+    return (
+      <h3 className="text-center text-slate-400 font-medium py-4 text-2xl">
+        Your orders are loading, please wait...
+      </h3>
+    );
+
+  }
+
   return (
     <div className="container mx-auto p-4 space-y-6">
       <h1 className="text-2xl font-semibold mb-4">Your Orders</h1>
