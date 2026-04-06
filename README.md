@@ -164,13 +164,12 @@ RAZORPAY_SECRET=your_secret
 
 ## 📸 👉 **SCREENSHOTS (ADD YOUR IMAGES)**
 
-```
 <img width="1349" height="640" alt="image" src="https://github.com/user-attachments/assets/8758564b-77f0-4428-9151-25f7c28dcd67" />
 <img width="1350" height="640" alt="image" src="https://github.com/user-attachments/assets/5b76407a-50cd-4d72-aafa-dbb475e6e09c" />
 <img width="1353" height="637" alt="image" src="https://github.com/user-attachments/assets/7ae8a5f5-2cd6-48bb-88fd-9595a1c6f9a2" />
 <img width="1325" height="655" alt="image" src="https://github.com/user-attachments/assets/3200df0f-02c6-4f0c-bf73-1df1027c7f8c" />
 
-```
+
 
 ---
 
